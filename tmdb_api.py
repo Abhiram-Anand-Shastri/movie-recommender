@@ -16,6 +16,7 @@ The function returns a full image URL or None on any failure.
 """
 
 from __future__ import annotations
+import time
 import requests
 
 TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
@@ -37,6 +38,7 @@ def fetch_poster(movie_title: str, release_year: str = "", api_key: str | None =
     movie_title = movie_title.split("(")[0].split(":")[0].strip()
 
     try:
+        time.sleep(0.2)
         response = requests.get(
             TMDB_SEARCH_URL,
             params={

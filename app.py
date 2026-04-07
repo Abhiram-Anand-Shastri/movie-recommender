@@ -98,7 +98,7 @@ def _year(release_date: str) -> str:
     except Exception:
         return ""
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(ttl=86400, show_spinner=False)  # cache for 1 day
 def get_poster_cached(title, year):
     return fetch_poster(title, year)
 
@@ -138,11 +138,17 @@ def render_movie_card(movie: dict, show_poster: bool = True) -> None:
 def render_results(results: list[dict], message: str) -> None:
     if message:
         st.markdown(f'<p class="status-msg">{message}</p>', unsafe_allow_html=True)
+
     if not results:
         st.info("No movies to display.")
         return
+
+    # ✅ ADD HERE
+    results = results[:5]
+
     # Show in two columns for a nicer layout
     cols = st.columns(2)
+
     for i, movie in enumerate(results):
         with cols[i % 2]:
             render_movie_card(movie)
