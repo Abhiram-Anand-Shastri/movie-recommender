@@ -124,21 +124,15 @@ def render_movie_card(movie: dict, show_poster: bool = True) -> None:
     meta = "  ·  ".join(str(p) for p in meta_parts if p)
 
     poster_url = get_poster_cached(title, year) if show_poster else PLACEHOLDER_IMAGE
-    img_html = f'<img src="{poster_url}" alt="poster"/>'
+    col1, col2 = st.columns([1, 3])
 
-    st.markdown(
-        f"""
-        <div class="movie-card">
-            {img_html}
-            <div class="movie-info">
-                <h4>{title}</h4>
-                <p>{overview_short}</p>
-                <p class="movie-meta">{meta}</p>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    with col1:
+        st.image(poster_url, use_container_width=True)
+
+    with col2:
+        st.markdown(f"### {title}")
+        st.write(overview_short)
+        st.caption(meta)
 
 
 def render_results(results: list[dict], message: str) -> None:

@@ -19,7 +19,7 @@ from __future__ import annotations
 import requests
 
 TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
-TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500"
+TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w780"
 PLACEHOLDER_IMAGE = "https://via.placeholder.com/200x300?text=No+Poster"
 
 
