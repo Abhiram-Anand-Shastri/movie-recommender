@@ -34,8 +34,8 @@ def fetch_poster(movie_title: str, release_year: str = "", api_key: str | None =
     if not api_key:
         return PLACEHOLDER_IMAGE
 
-    # ✅ Clean title (very important)
-    movie_title = movie_title.split("(")[0].strip()
+    # ✅ Clean title
+    movie_title = movie_title.split("(")[0].split(":")[0].strip()
 
     try:
         response = requests.get(
@@ -54,14 +54,16 @@ def fetch_poster(movie_title: str, release_year: str = "", api_key: str | None =
         if not results:
             return PLACEHOLDER_IMAGE
 
-        # ✅ STEP 1: Try exact year match
+        # ✅ STEP 1: Match exact year
         for movie in results:
             if release_year and movie.get("release_date", "").startswith(str(release_year)):
                 if movie.get("poster_path"):
                     return TMDB_IMAGE_BASE + movie["poster_path"]
 
-        # ✅ STEP 2: Try best popularity match
+        # ✅ STEP 2: Sort by popularity (best match)
         results = sorted(results, key=lambda x: x.get("popularity", 0), reverse=True)
+
+        # ✅ STEP 3: First valid poster
         for movie in results:
             if movie.get("poster_path"):
                 return TMDB_IMAGE_BASE + movie["poster_path"]
