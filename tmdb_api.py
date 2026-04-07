@@ -19,7 +19,7 @@ from __future__ import annotations
 import requests
 
 TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
-TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w780"
+TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500"
 PLACEHOLDER_IMAGE = "https://via.placeholder.com/200x300?text=No+Poster"
 
 
@@ -34,7 +34,6 @@ def fetch_poster(movie_title: str, release_year: str = "", api_key: str | None =
     if not api_key:
         return PLACEHOLDER_IMAGE
 
-    # ✅ Clean title
     movie_title = movie_title.split("(")[0].split(":")[0].strip()
 
     try:
@@ -45,30 +44,24 @@ def fetch_poster(movie_title: str, release_year: str = "", api_key: str | None =
                 "query": movie_title,
                 "include_adult": False,
             },
-            timeout=5,
+            timeout=10,   # 🔥 increase timeout
         )
         response.raise_for_status()
+
         data = response.json()
         results = data.get("results", [])
 
         if not results:
             return PLACEHOLDER_IMAGE
 
-        # ✅ STEP 1: Match exact year
-        for movie in results:
-            if release_year and movie.get("release_date", "").startswith(str(release_year)):
-                if movie.get("poster_path"):
-                    return TMDB_IMAGE_BASE + movie["poster_path"]
-
-        # ✅ STEP 2: Sort by popularity (best match)
+        # 🔥 sort by popularity (better stability)
         results = sorted(results, key=lambda x: x.get("popularity", 0), reverse=True)
 
-        # ✅ STEP 3: First valid poster
         for movie in results:
             if movie.get("poster_path"):
                 return TMDB_IMAGE_BASE + movie["poster_path"]
 
-    except Exception:
-        pass
+    except Exception as e:
+        print("TMDB ERROR:", e)   # 🔥 DEBUG
 
     return PLACEHOLDER_IMAGE
