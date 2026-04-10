@@ -1,7 +1,7 @@
 # 🎬 Movie Recommendation System
 
 A content-based movie recommendation app built with Python, Scikit-learn, and Streamlit.
-
+Project Link : https://movie-recommender-kytgkcib8tgajpnahdb3kc.streamlit.app/
 ## Features
 - Recommend similar movies by title
 - Multi-field search (genre, actor, director, keyword)
